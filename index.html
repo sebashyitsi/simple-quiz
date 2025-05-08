@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Simple Quiz App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .quiz-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 320px;
+    }
+
+    #answers li {
+      margin: 10px 0;
+      list-style-type: none;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    #result {
+      font-weight: bold;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h2 id="question">Question text</h2>
+    <ul id="answers"></ul>
+    <button id="submit">Submit</button>
+    <p id="result"></p>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "Which language runs in a web browser?",
+        options: ["Java", "C", "Python", "JavaScript"],
+        correct: "JavaScript"
+      },
+      {
+        question: "What does CSS stand for?",
+        options: ["Central Style Sheets", "Cascading Style Sheets", "Computer Style Sheets", "Colorful Style Sheets"],
+        correct: "Cascading Style Sheets"
+      },
+      {
+        question: "What does HTML stand for?",
+        options: ["Hypertext Markup Language", "Hypertext Markdown Language", "Hyperloop Machine Language", "Helicopters Terminals Motorboats Lamborghinis"],
+        correct: "Hypertext Markup Language"
+      }
+    ];
+
+    let currentQuiz = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById("question");
+    const answersEl = document.getElementById("answers");
+    const submitBtn = document.getElementById("submit");
+    const resultEl = document.getElementById("result");
+
+    function loadQuiz() {
+      const current = quizData[currentQuiz];
+      questionEl.textContent = current.question;
+      answersEl.innerHTML = "";
+
+      current.options.forEach(option => {
+        const li = document.createElement("li");
+        li.innerHTML = `<label><input type="radio" name="answer" value="${option}" /> ${option}</label>`;
+        answersEl.appendChild(li);
+      });
+    }
+
+    submitBtn.addEventListener("click", () => {
+      const selected = document.querySelector('input[name="answer"]:checked');
+      if (!selected) return;
+
+      if (selected.value === quizData[currentQuiz].correct) {
+        score++;
+      }
+
+      currentQuiz++;
+
+      if (currentQuiz < quizData.length) {
+        loadQuiz();
+      } else {
+        questionEl.textContent = "Quiz Completed!";
+        answersEl.innerHTML = "";
+        submitBtn.style.display = "none";
+        resultEl.textContent = `You scored ${score} out of ${quizData.length}`;
+      }
+    });
+
+    loadQuiz();
+  </script>
+</body>
+</html>
